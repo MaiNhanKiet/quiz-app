@@ -6,6 +6,4 @@ export type QuestionProps = {
 
 export type AnswerOptionProps = {
   option: string;
-  isSelected: boolean;
-  onPress: () => void;
 };

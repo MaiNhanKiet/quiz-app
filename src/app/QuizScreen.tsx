@@ -5,31 +5,53 @@ import Entypo from "@expo/vector-icons/Entypo";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
 import { useQuizContext } from "../providers/QuizProvider";
+import { useEffect } from "react";
+import { useTimer } from "../hooks/useTimer";
 
 const QuizScreen = () => {
-  const { question, questionIndex, onNext } = useQuizContext();
+  const { question, questionIndex, onNext, score, totalQuestions, bestScore } =
+    useQuizContext();
+
+  const { time, startTimer, clearTimer } = useTimer(20);
+
+  useEffect(() => {
+    startTimer();
+    return () => clearTimer();
+  }, [question]);
+
+  useEffect(() => {
+    if (time === 0) {
+      onNext();
+    }
+  }, [time]);
 
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         {/* Header */}
         <View>
-          <Text style={styles.title}>Câu {questionIndex + 1}/5</Text>
+          <Text style={styles.title}>
+            Câu {questionIndex + 1}/{totalQuestions}
+          </Text>
         </View>
         {/* Question Card and Timer */}
         <View>
           {question ? (
-            <QuestionCard question={question} />
+            <>
+              <QuestionCard question={question} />
+              <Text style={styles.time}> {time} giây</Text>
+            </>
           ) : (
             <Card title="Well done!">
               <View>
                 <Text>Bạn đã hoàn thành bài quiz.</Text>
-                <Text>Điểm số của bạn: 4/5</Text>
-                <Text>Điểm cao nhất: 10</Text>
+                <Text>
+                  Điểm số của bạn: {score}/{totalQuestions}
+                </Text>
+                <Text>Điểm cao nhất: {bestScore}</Text>
               </View>
             </Card>
           )}
-          <Text style={styles.time}> 20 giây</Text>
         </View>
         {/* Footer */}
         <CustomButton
