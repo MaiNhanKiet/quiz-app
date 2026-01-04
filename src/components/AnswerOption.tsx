@@ -1,10 +1,17 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { AnswerOptionProps } from "../types";
 
-const AnswerOption = () => {
+const AnswerOption = ({ option, isSelected, onPress }: AnswerOptionProps) => {
   return (
-    <View style={styles.container}>
-      <Text>This is an answer option</Text>
-    </View>
+    <Pressable
+      onPress={() => onPress()}
+      style={[
+        styles.container,
+        isSelected && { backgroundColor: "#E1F396", borderColor: "#A3D900" },
+      ]}
+    >
+      <Text>{option}</Text>
+    </Pressable>
   );
 };
 
@@ -12,7 +19,8 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: 100,
   },
 });

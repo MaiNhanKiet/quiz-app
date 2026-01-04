@@ -1,41 +1,32 @@
 import { Text, View, StyleSheet } from "react-native";
 import AnswerOption from "./AnswerOption";
+import { QuestionProps } from "../types";
+import Card from "./Card";
+import { useState } from "react";
 
-const QuestionCard = () => {
+const QuestionCard = ({ question }: { question: QuestionProps }) => {
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const handleSelectOption = (option: string) => {
+    setSelectedOption(option);
+  };
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.question}>What is React Native ?</Text>
-      <View style={{ gap: 12 }}>
-        <AnswerOption />
-        <AnswerOption />
-        <AnswerOption />
-        <AnswerOption />
-      </View>
+    <View>
+      <Card title={question.title}>
+        <View style={{ gap: 12 }}>
+          {question.options.map((option, index) => (
+            <AnswerOption
+              key={index}
+              option={option}
+              isSelected={selectedOption === option}
+              onPress={() => handleSelectOption(option)}
+            />
+          ))}
+        </View>
+      </Card>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-    gap: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.41,
-    shadowRadius: 9.11,
-
-    elevation: 14,
-  },
-  question: {
-    fontSize: 24,
-    fontWeight: "600",
-  },
-});
 
 export default QuestionCard;
