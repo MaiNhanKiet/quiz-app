@@ -12,6 +12,9 @@ type QuizContextType = {
   score: number;
   totalQuestions: number;
   bestScore: number;
+  hasStarted: boolean;
+  startQuiz: () => void;
+  resetToStart: () => void;
 };
 
 const QuizContext = createContext<QuizContextType>({
@@ -21,6 +24,9 @@ const QuizContext = createContext<QuizContextType>({
   score: 0,
   totalQuestions: 0,
   bestScore: 0,
+  hasStarted: false,
+  startQuiz: () => {},
+  resetToStart: () => {},
 });
 
 type QuizProviderProps = {
@@ -33,6 +39,7 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
   const [selectedOption, setSelectedOption] = useState<string | undefined>();
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
   const isFinished = questionIndex >= questions.length;
 
   useEffect(() => {
@@ -46,10 +53,25 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
     }
   }, [isFinished]);
 
+  const startQuiz = () => {
+    setQuestionIndex(0);
+    setScore(0);
+    setSelectedOption(undefined);
+    setHasStarted(true);
+  };
+
+  const resetToStart = () => {
+    setQuestionIndex(0);
+    setScore(0);
+    setSelectedOption(undefined);
+    setHasStarted(false);
+  };
+
   const restartQuiz = () => {
     setQuestionIndex(0);
     setScore(0);
     setSelectedOption(undefined);
+    setHasStarted(true);
   };
 
   const onNext = () => {
@@ -91,6 +113,9 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
         score,
         totalQuestions: questions.length,
         bestScore,
+        hasStarted,
+        startQuiz,
+        resetToStart,
       }}
     >
       {children}
